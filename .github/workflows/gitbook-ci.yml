@@ -33,11 +33,11 @@ jobs:
       env:
         TOKEN: ${{ secrets.ACCESS_TOKEN }}
         REF: github.com/${{github.repository}}
-        MYEMAIL: itoak@qq.com                  # ！！记得修改为自己github设置的邮箱
+        MYEMAIL: 1329166894@qq.com                  # ！！记得修改为自己github设置的邮箱
         MYNAME: ${{github.repository_owner}}          
       run: |
         cd _book
-        git config --global user.email "itoak@qq.com"
+        git config --global user.email "1329166894@qq.com"
         git config --global user.name "oneisx"
         git init
         git remote add origin https://${REF}

@@ -62,14 +62,14 @@ module.exports = {
                 "messenger","twitter", "weibo"
             ]
         },
-        /**"donate": {
-            "wechat": "/images/wechat_payment.jpeg",
-            "alipay": "/images/ali_payment.jpeg",
-            "title": "",
-            "button": "赏",
-            "alipayText": "支付宝打赏",
-            "wechatText": "微信打赏"
-        },**/
+        "donate": {
+            "wechat": "/resources/common/wechat.png",
+            "alipay": "/resources/common/ali.png",
+            "title": "一杯咖啡吸收宇宙能量",
+            "button": "举杯",
+            "alipayText": "马老板举杯",
+            "wechatText": "另一个马老板举杯"
+        },
         "github": {
             "url": "https://github.com/oneisx"
         },
