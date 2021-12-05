@@ -19,7 +19,7 @@ module.exports = {
         "tbfed-pagefooter",
         "-sharing",
         "sharing-plus",
-        "donate",
+        //"donate",
         "github",
         "hide-element",
         "auto-scroll-table",
@@ -62,14 +62,14 @@ module.exports = {
                 "messenger","twitter", "weibo"
             ]
         },
-        "donate": {
+        /**"donate": {
             "wechat": "/resources/common/wechat.png",
             "alipay": "/resources/common/ali.png",
-            "title": "一杯咖啡吸收宇宙能量",
+            "title": "",
             "button": "举杯",
-            "alipayText": "马老板举杯",
-            "wechatText": "另一个马老板举杯"
-        },
+            "alipayText": "支付宝",
+            "wechatText": "微信"
+        },**/
         "github": {
             "url": "https://github.com/oneisx"
         },
