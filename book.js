@@ -1,7 +1,7 @@
 module.exports = {
-    title: "chnherb's blog",
-    description: "chnherb's blog about computer technology",
-    author: "chnherb",
+    title: "oneisx's blog",
+    description: "oneisx's blog about computer technology",
+    author: "oneisx",
     lang: "zh-cn",
     plugins: [
         "-lunr", "-search", "search-pro",
@@ -43,7 +43,7 @@ module.exports = {
             "visible": true,
         },
         "tbfed-pagefooter": {
-            "copyright": "Copyright © chnhuangbo@qq.com 2020",
+            "copyright": "Copyright © itoak@qq.com 2020",
             "modify_label": "修订时间：",
             "modify_format": "YYYY-MM-DD HH:mm:ss"
         },
@@ -62,16 +62,16 @@ module.exports = {
                 "messenger","twitter", "weibo"
             ]
         },
-        "donate": {
+        /**"donate": {
             "wechat": "/images/wechat_payment.jpeg",
             "alipay": "/images/ali_payment.jpeg",
             "title": "",
             "button": "赏",
             "alipayText": "支付宝打赏",
             "wechatText": "微信打赏"
-        },
+        },**/
         "github": {
-            "url": "https://github.com/chnherb"
+            "url": "https://github.com/oneisx"
         },
         "hide-element": {
             "elements": [".gitbook-link"]
