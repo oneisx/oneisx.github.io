@@ -1,29 +1,59 @@
+# The Site Configuration
+
+# Import the theme
 theme: jekyll-theme-chirpy
+#theme: jekyll-theme-cayman
+
+# Change the following value to '/PROJECT_NAME' ONLY IF your site type is GitHub Pages Project sites
+# and doesn't have a custom domain.
 baseurl: ''
+
+# The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
+# If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
+# otherwise, the layout language will use the default value of 'en'.
 lang: zh-CN
+
+# Change to your timezone › http://www.timezoneconverter.com/cgi-bin/findzone/findzone
 timezone: Asia/Shanghai
-title: Oneisx
-tagline: 在这个世界上，相遇即是美好
+
+# jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
+# ↓ --------------------------
+
+title: Chirpy                          # the main title
+
+tagline: A text-focused Jekyll theme   # it will display as the sub-title
+
 description: >-                        # used by seo meta and the atom feed
   A minimal, portfolio, sidebar,
   bootstrap Jekyll theme with responsive web design
   and focuses on text presentation.
+
+# fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://oneisx.github.io'
+
 github:
-  username: oneisx
+  username: oneisx             # change to your github username
+
 twitter:
-  username: twitter_username
+  username: twitter_username            # change to your twitter username
+
 social:
+  # Change to your full name.
+  # It will be displayed as the default author of the posts and the copyright owner in the Footer
   name: oneisx
-  email: itoak@qq.com
+  email: itoak@qq.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://github.com/oneisx
-    - https://twitter.com/username
+    - https://twitter.com/username      # change to your twitter homepage
+    - https://github.com/username       # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
+
 google_site_verification: google_meta_tag_verification # change to your verification string
+
+# ↑ --------------------------
+
 
 google_analytics:
   id: ''              # fill in your Google Analytics ID
@@ -31,9 +61,29 @@ google_analytics:
   pv:
     proxy_endpoint:   # fill in the Google Analytics superProxy endpoint of Google App Engine
     cache_path:       # the local PV cache data, friendly to visitors from GFW region
+
+# Prefer color scheme setting.
+#
+# Note: Keep empty will follow the system prefer color by default,
+# and there will be a toggle to switch the theme between dark and light
+# on the bottom left of the sidebar.
+#
+# Available options:
+#
+#     light  - Use the light color scheme
+#     dark   - Use the dark color scheme
+#
 theme_mode:   # [light|dark]
-img_cdn: ''
-avatar: './resources/common/wechat.jpg'
+
+# The CDN endpoint for images.
+# Notice that once it is assigned, the CDN url
+# will be added to all image (site avatar & posts' images) paths starting with '/'
+#
+# e.g. 'https://cdn.com'
+img_cdn: 'https://cdn.jsdelivr.net/gh/cotes2020/chirpy-images@0a003683c0c3ca549d12c309f9b3e03ea20981e5'
+
+# the avatar on sidebar, support local or CORS resources
+avatar: '/commons/avatar.jpg'
 
 # boolean type, the global switch for ToC in posts.
 toc: true
@@ -112,7 +162,7 @@ exclude:
   - package*.json
 
 jekyll-archives:
-  enabled: [categories, tags, resources]
+  enabled: [categories, tags]
   layouts:
     category: category
     tag: tag
