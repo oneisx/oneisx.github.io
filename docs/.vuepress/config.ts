@@ -224,7 +224,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       options: {
         clientID: '7780802f113dde1645d3',
         clientSecret: '2a6ad8151534fd9e6bf35239f1fc1ded9fda86a0',
-        repo: 'blog-gitalk-comment', // GitHub 仓库
+        repo: 'mercury', // GitHub 仓库
         owner: 'oneisx', // GitHub仓库所有者
         admin: ['oneisx'], // 对仓库有写权限的人
         // distractionFreeMode: true,
