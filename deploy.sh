@@ -15,7 +15,6 @@ cd docs/.vuepress/dist
 if [ -z "$GITHUB_TOKEN" ]; then
   githubUrl=git@github.com:oneisx/oneisx.github.io.git
 else
-  msg='来自github actions的自动部署'
   githubUrl=https://oneisx:${GITHUB_TOKEN}@github.com/oneisx/oneisx.github.io.git
   git config --global user.name "oneisx"
   git config --global user.email "1329166894@qq.com"
