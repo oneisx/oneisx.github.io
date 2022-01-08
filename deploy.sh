@@ -21,7 +21,7 @@ else
 fi
 git init
 git add -A
-git commit -m "Updated By Github Actions With Build ${{github.run_number}} of ${{github.workflow}} For Github Pages"
+git commit -m "deploy"
 git push -f $githubUrl main:gh-pages # 推送到github gh-pages分支
 
 # deploy to coding pages
