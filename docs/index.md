@@ -9,15 +9,15 @@ tagline: 如果真的喜欢，又哪来那么多借口
 
 features: # 可选的
   - title: Java
-    details: 吃饭的家伙
+    details: Java具有简单性、面向对象、分布式、健壮性、安全性、平台独立与可移植性、多线程、动态性等特点。
     link: /java/ # 可选
     imgUrl: /img/java.png # 可选
   - title: Golang
-    details: 提升效率的家伙
+    details: Go（又称Golang）是Google开发的一种静态强类型、编译型、并发型，并具有垃圾回收功能的编程语言。
     link: /golang/
     imgUrl: /img/golang.png
   - title: Python
-    details: 写用例的家伙
+    details: Python是完全面向对象的语言，函数、模块、数字、字符串都是对象，并且完全支持继承、重载、派生、多继承。
     link: /python/
     imgUrl: /img/python.png
 
