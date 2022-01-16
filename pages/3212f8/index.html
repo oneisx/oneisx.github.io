@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>看了这篇你就会手写RPC框架了 | oneisx</title>
+    <meta name="generator" content="VuePress 1.9.2">
+    <link rel="icon" href="/img/favicon.ico">
+    <meta name="description" content="web后端技术博客,专注web后端学习与总结。Java,Golang,Python,Linux,数据库,消息队列,Git,Github等技术文章。">
+    <meta name="keywords" content="java,golang,python,linux">
+    <meta name="theme-color" content="#11a8cd">
+    
+    <link rel="preload" href="/assets/css/0.styles.15972595.css" as="style"><link rel="preload" href="/assets/js/app.30b63f87.js" as="script"><link rel="preload" href="/assets/js/2.f7063564.js" as="script"><link rel="preload" href="/assets/js/10.a486be49.js" as="script"><link rel="prefetch" href="/assets/js/11.3be85347.js"><link rel="prefetch" href="/assets/js/12.42495b81.js"><link rel="prefetch" href="/assets/js/13.780e53a8.js"><link rel="prefetch" href="/assets/js/14.ccfecdbd.js"><link rel="prefetch" href="/assets/js/15.c8788711.js"><link rel="prefetch" href="/assets/js/16.28470c50.js"><link rel="prefetch" href="/assets/js/17.17a2955c.js"><link rel="prefetch" href="/assets/js/18.9caadfa2.js"><link rel="prefetch" href="/assets/js/19.30c4cde3.js"><link rel="prefetch" href="/assets/js/20.7dc876c0.js"><link rel="prefetch" href="/assets/js/21.1732e28a.js"><link rel="prefetch" href="/assets/js/22.78827142.js"><link rel="prefetch" href="/assets/js/3.ab9e6633.js"><link rel="prefetch" href="/assets/js/4.83469f4c.js"><link rel="prefetch" href="/assets/js/5.c1466431.js"><link rel="prefetch" href="/assets/js/6.6a0d5aa2.js"><link rel="prefetch" href="/assets/js/7.43886d2e.js"><link rel="prefetch" href="/assets/js/8.72e251f1.js"><link rel="prefetch" href="/assets/js/9.efed16dc.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.15972595.css">
+  </head>
+  <body class="theme-mode-light">
+    <div id="app" data-server-rendered="true"><div class="theme-container sidebar-open have-rightmenu only-sidebarItem"><header class="navbar blur"><div title="目录" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/img/logo.png" alt="oneisx" class="logo"> <span class="site-name can-hide">oneisx</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><a href="/java/" class="nav-link">Java</a></div><div class="nav-item"><a href="/golang/" class="nav-link">Golang</a></div><div class="nav-item"><a href="/python/" class="nav-link">Python</a></div><div class="nav-item"><a href="/linux/" class="nav-link">Linux</a></div><div class="nav-item"><a href="/version-control/" class="nav-link">版本控制</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/archives/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div> <a href="https://github.com/oneisx/oneisx.github.io" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <div class="sidebar-hover-trigger"></div> <aside class="sidebar" style="display:none;"><div class="blogger"><img src="/img/weixin.jpg"> <div class="blogger-info"><h3>oneisx</h3> <span>睁不开眼的雷</span></div></div> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">首页</a></div><div class="nav-item"><a href="/java/" class="nav-link">Java</a></div><div class="nav-item"><a href="/golang/" class="nav-link">Golang</a></div><div class="nav-item"><a href="/python/" class="nav-link">Python</a></div><div class="nav-item"><a href="/linux/" class="nav-link">Linux</a></div><div class="nav-item"><a href="/version-control/" class="nav-link">版本控制</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="索引" class="dropdown-title"><a href="/archives/" class="link-title">索引</a> <span class="title" style="display:none;">索引</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/" class="nav-link">分类</a></li><li class="dropdown-item"><!----> <a href="/tags/" class="nav-link">标签</a></li><li class="dropdown-item"><!----> <a href="/archives/" class="nav-link">归档</a></li></ul></div></div> <a href="https://github.com/oneisx/oneisx.github.io" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><a href="/pages/3212f8/" aria-current="page" class="active sidebar-link">看了这篇你就会手写RPC框架了</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/pages/3212f8/#一、学习本文你能学到什么" class="sidebar-link">一、学习本文你能学到什么？</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#二、rpc基础知识" class="sidebar-link">二、RPC基础知识</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/pages/3212f8/#_2-1-rpc是什么" class="sidebar-link">2.1 RPC是什么？</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_2-2-rpc的流程" class="sidebar-link">2.2 RPC的流程</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_2-3-rpc流程中需要处理的问题" class="sidebar-link">2.3 RPC流程中需要处理的问题</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_2-4-rpc协议是什么" class="sidebar-link">2.4 RPC协议是什么？</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_2-5-rpc框架是什么" class="sidebar-link">2.5 RPC框架是什么？</a></li></ul></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#三、手写rpc" class="sidebar-link">三、手写RPC</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/pages/3212f8/#_3-1-目标" class="sidebar-link">3.1 目标</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_3-2-项目整体结构" class="sidebar-link">3.2 项目整体结构</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_3-3-客户端编写" class="sidebar-link">3.3 客户端编写</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_3-4-服务端编写" class="sidebar-link">3.4 服务端编写</a></li></ul></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#四、使用rpc框架" class="sidebar-link">四、使用RPC框架</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/pages/3212f8/#_4-1-一个条件" class="sidebar-link">4.1 一个条件</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_4-2-步骤一" class="sidebar-link">4.2 步骤一</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_4-3-步骤二" class="sidebar-link">4.3 步骤二</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_4-4-步骤三" class="sidebar-link">4.4 步骤三</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#_4-5-步骤四" class="sidebar-link">4.5 步骤四</a></li></ul></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#五、源码下载" class="sidebar-link">五、源码下载</a></li><li class="sidebar-sub-header"><a href="/pages/3212f8/#六、总结" class="sidebar-link">六、总结</a></li></ul></li></ul> </aside> <div><main class="page"><div class="theme-vdoing-wrapper "><div class="articleInfo-wrap" data-v-0c557b5e><div class="articleInfo" data-v-0c557b5e><ul class="breadcrumbs" data-v-0c557b5e><li data-v-0c557b5e><a href="/" title="首页" class="iconfont icon-home router-link-active" data-v-0c557b5e></a></li> <li data-v-0c557b5e><a href="/categories/?category=Java" title="分类" data-v-0c557b5e>Java</a></li></ul> <div class="info" data-v-0c557b5e><div title="作者" class="author iconfont icon-touxiang" data-v-0c557b5e><a href="https://github.com/oneisx" target="_blank" title="作者" class="beLink" data-v-0c557b5e>oneisx</a></div> <div title="创建时间" class="date iconfont icon-riqi" data-v-0c557b5e><a href="javascript:;" data-v-0c557b5e>2022-01-07</a></div> <!----></div></div></div> <!----> <div class="content-wrapper"><div class="right-menu-wrapper"><div class="right-menu-margin"><div class="right-menu-content"></div></div></div> <h1><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAABKFJREFUSA3tVl1oFVcQnrMbrak3QUgkya1akpJYcrUtIqW1JvFBE9LiQ5v6JmJpolbMg32rVrhgoYK0QiMY6i9Y6EMaW5D+xFJaTYItIuK2Kr3+BJNwkxBj05sQY3b3nM6cs2dv9t7NT/vQJw/sndk5M/PNzJkzewGerP+pAmy+ON8lLzUJgA8ZYxYIYZmGYRnctDaWvJJAmTtfP1pvXsBCCPP8QFcCaRkZYACgDZFO4stNIcBCajEOlmmC9XpJ9bAGCaPaPmzPl32dvLSVu3BWCTQs0XQQ6g0DYgwLIoAZbBCdW/i+781o1VVlm/410mw4h06Y7bIPHNyWDyL4FHkX03Q8SrzNhZTZriieckWt7cL6MM85YcLpsi/7O9/iXFT6MswI0DmmpkSaJ0qLxFIm3+i1THHB3zmBH3PYx9CcykcLOeQVVa7QtdxTgQgEleX2AjHYfwA+2ddV77ruGoJUbhGDI09YSNXyMpUt5ylOzxgbUmtOp7NmbNt8v3arjTBfYELmLUV+M+nSawNNAUqpT3ClJWg5I3BLT+cGW/DXNGCa6tx1aakCGEigArTn4TDIPdrXXYKCZNrHLMCOEPvHBlLQ99s9eHB7EB6NTki73CVPQ2F5MSx/uRQixfmq7rK0wYD8w8E905bnPDfwoWs/rfv93NWN/ZfvwsLIU7A09gxECyISeGJkHAau98L97tuw7NXnoPyNF8FcYGLGKsOs0mN3OEyec9esGW/ZEl945dTP34wlR2FZVQWU1q0Cw8Tr7p+hgLLNL0FPxx/Q35mA8aEUrH6nCgwEl0tn7wUiZYJnNRh6DK4UH/k0lfyrsBKdPVv/AriGIQcEDQZ65LBAGe2Rzui9Ybjz7XUppz1/uKBbyVPGkN3ZAeC6hr0x7Nr38N5+EqkoOm17xpoqR9ohQF55ERSvr4Dkr3chNfC3DMzGJlNBElW8w9nsGQvhNGIzDkXzCg8cLK951xHsFBlTJspJNi3ZFIMF2AeDV3q8DNOB+YHi6QTrChDIWDBRi5U5f+ZMfJLu3ccrqxtdxk4SKH336LFxSmkqefwU5T8fhdSdQf9IVKD6aNiwI/hnmcAZ91isYMJIaCUCx9W098+LgruikeTqzqqxKPUwqJyCPJiyemVVZBOijDGjD38Os0jOiSPL1z3SPjXNANbiNPXAdzTfukjjuknNBbyz3nwgTd3AVFqUJ5hpHlq9MveLnWwttUfoygBmvVjuikxND3znrhsELnZk7k+OjIGxeNEkomyLVta0xxn+HZhjBc4YZ/AFjHjz9u3xRZl2BN4aq9nFwWh16IrQ1aHHEd3j1+4/dB9OtH4e29A2H1DyHQRmOSfQZ1Fy7MHBTGB6J/Djq6p3OxyO2cB+4Car7v/o3GXgfAkj23+x9ID1Teoamo/SXcbvSf2PX7Vc8DdCmE1vN9di+32P9/5YR3vLnhCVGUWBjEkr3yh4H8v9CzmsbdhzOKzsJKM90iFdaTMjRPhGVsakRvOaRidljo6H6G7j+ctrJpsP+4COhDIl0La2+FS4+5mlocBaXY5QnGZysIBYoeSsl5qQzrSj/cgNrfuEzlWBfwA+EjrZyWUvpAAAAABJRU5ErkJggg==">看了这篇你就会手写RPC框架了<!----></h1>  <div class="theme-vdoing-content content__default"><h2 id="一、学习本文你能学到什么"><a href="#一、学习本文你能学到什么" class="header-anchor">#</a> 一、学习本文你能学到什么？</h2> <ul><li>RPC的概念及运作流程</li> <li>RPC协议及RPC框架的概念</li> <li>Netty的基本使用</li> <li>Java序列化及反序列化技术</li> <li>Zookeeper的基本使用（注册中心）</li> <li>自定义注解实现特殊业务逻辑</li> <li>Java的动态代理</li> <li>自定义Spring Boot Starter</li></ul> <p>这里只是列出了你能从RPC框架源码中能学到的东西，本文并不会每个知识点都点到，主要讲述如何手写一个RPC框架，更多细节需要读者阅读源码，文章的下方会提供源码链接哦。</p> <h2 id="二、rpc基础知识"><a href="#二、rpc基础知识" class="header-anchor">#</a> 二、RPC基础知识</h2> <h3 id="_2-1-rpc是什么"><a href="#_2-1-rpc是什么" class="header-anchor">#</a> 2.1 RPC是什么？</h3> <p>Remote Procedure Call（RPC）：远程过程调用。</p> <blockquote><p>过程是什么？
+过程就是业务处理、计算任务，更直白理解，就是程序。（像调用本地方法一样调用远程的过程。）</p></blockquote> <p>RPC采用Client-Server结构，通过Request-Response消息模式实现。</p> <h3 id="_2-2-rpc的流程"><a href="#_2-2-rpc的流程" class="header-anchor">#</a> 2.2 RPC的流程</h3> <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pdG9hay5naXRlZS5pby9ibG9nLWFydGljbGVzL2phdmEvaW1hZ2VzLzIucG5n?x-oss-process=image/format,png" alt="image-20200712085059464"></p> <ul><li>客户端处理过程中<code>调用</code>Client stub（就像调用本地方法一样），传递参数；</li> <li>Client stub将参数<code>编组</code>为消息，然后通过系统调用向服务端发送消息；</li> <li>客户端本地操作系统将消息从客户端机器<code>发送</code>到服务端机器；</li> <li>服务端操作系统将接收到的数据包<code>传递</code>给Server stub;</li> <li>Server stub<code>解组</code>消息为参数；</li> <li>Server stub<code>再调用</code>服务端的过程，过程执行结果以反方向的相同步骤响应给客户端。</li></ul> <h3 id="_2-3-rpc流程中需要处理的问题"><a href="#_2-3-rpc流程中需要处理的问题" class="header-anchor">#</a> 2.3 RPC流程中需要处理的问题</h3> <ul><li>Client stub、Server stub的开发；</li> <li>参数如何编组为消息，以及解组消息；</li> <li>消息如何发送；</li> <li>过程结果如何表示、异常情况如何处理；</li> <li>如何实现安全的访问控制。</li></ul> <h3 id="_2-4-rpc协议是什么"><a href="#_2-4-rpc协议是什么" class="header-anchor">#</a> 2.4 RPC协议是什么？</h3> <p>RPC调用过程中需要将参数编组为消息进行发送，接受方需要解组消息为参数，过程处理结果同样需要经编组、解组。消息由哪些部分构成及消息的表示形式就构成了消息协议。</p> <p><strong>RPC调用过程中采用的消息协议称为RPC协议</strong></p> <blockquote><p>RPC协议规定请求、响应消息的格式</p> <p>在TCP（网络传输控制协议）上可选用或自定义消息协议来完成RPC消息交互</p> <p>我们可以选用通用的标准协议（如：http、https），也也可根据自身的需要定义自己的消息协议。</p></blockquote> <h3 id="_2-5-rpc框架是什么"><a href="#_2-5-rpc框架是什么" class="header-anchor">#</a> 2.5 RPC框架是什么？</h3> <p>封装好参数编组、消息解组、底层网络通信的RPC程序开发框架，带来的便捷是可以直接在其基础上只需要专注于过程代码编写。</p> <p>Java领域：</p> <ul><li>传统的webservice框架：Apache CXF、Apache Axis2、Java自带的JAX-WS等。webservice框架大多基于标准的SOAP协议。</li> <li>新兴的微服务框架：Dubbo、spring cloud、Apache Thrift等。</li></ul> <h2 id="三、手写rpc"><a href="#三、手写rpc" class="header-anchor">#</a> 三、手写RPC</h2> <h3 id="_3-1-目标"><a href="#_3-1-目标" class="header-anchor">#</a> 3.1 目标</h3> <p>我们将会写一个简易的RPC框架，暂且叫它<code>leisure-rpc-spring-boot-starter</code>，通过在项目中引入该starter，并简单的配置一下，项目即拥有提供远程服务的能力。</p> <p>编写自定义注解<code>@Service</code>，被它注解的类将会提供远程服务。</p> <p>编写自定义注解<code>@InjectService</code>，使用它可注入远程服务。</p> <h3 id="_3-2-项目整体结构"><a href="#_3-2-项目整体结构" class="header-anchor">#</a> 3.2 项目整体结构</h3> <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pdG9hay5naXRlZS5pby9ibG9nLWFydGljbGVzL2phdmEvaW1hZ2VzLzMucG5n?x-oss-process=image/format,png" alt="image-20200722221416777"></p> <h3 id="_3-3-客户端编写"><a href="#_3-3-客户端编写" class="header-anchor">#</a> 3.3 客户端编写</h3> <h4 id="_3-3-1-客户端需要做什么"><a href="#_3-3-1-客户端需要做什么" class="header-anchor">#</a> 3.3.1 客户端需要做什么？</h4> <p>客户端想要调用远程服务，必须具备<strong>服务发现</strong>的能力；在知道有哪些服务过后，还必须有<strong>服务代理</strong>来执行服务调用；客户端想要与服务端通信，必须要有相同的<strong>消息协议</strong>；客户端想要调用远程服务，那么必须具备网络请求的能力，即<strong>网络层</strong>功能。</p> <p>当然，这是客户端所需的最基本的能力，其实还可以扩展的能力，例如负载均衡。</p> <h4 id="_3-3-2-具体实现"><a href="#_3-3-2-具体实现" class="header-anchor">#</a> 3.3.2 具体实现</h4> <p>我们先看看客户端的代码结构：</p> <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pdG9hay5naXRlZS5pby9ibG9nLWFydGljbGVzL2phdmEvaW1hZ2VzLzQucG5n?x-oss-process=image/format,png" alt="image-20200722230006033"></p> <p>基于面向接口编程的理念，不同角色都实现了定义了相应规范的接口。这里面我们没有发现消息协议相关内容，那是因为服务端也需要消息协议，因此抽离了出来，放在公共层。</p> <h5 id="_3-3-2-1-服务发现者"><a href="#_3-3-2-1-服务发现者" class="header-anchor">#</a> 3.3.2.1 服务发现者</h5> <div class="language-java extra-class"><pre class="language-java"><code><span class="token comment">/**
+ * 服务发现抽象类，定义服务发现规范
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">ServiceDiscoverer</span> <span class="token punctuation">{</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Service</span><span class="token punctuation">&gt;</span></span> <span class="token function">getServices</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * Zookeeper服务发现者，定义以Zookeeper为注册中心的服务发现细则
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ZookeeperServiceDiscoverer</span> <span class="token keyword">implements</span> <span class="token class-name">ServiceDiscoverer</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">ZkClient</span> zkClient<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">ZookeeperServiceDiscoverer</span><span class="token punctuation">(</span><span class="token class-name">String</span> zkAddress<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        zkClient <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ZkClient</span><span class="token punctuation">(</span>zkAddress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        zkClient<span class="token punctuation">.</span><span class="token function">setZkSerializer</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ZookeeperSerializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * 使用Zookeeper客户端，通过服务名获取服务列表
+     * 服务名格式：接口全路径
+     *
+     * @param name 服务名
+     * @return 服务列表
+     */</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Service</span><span class="token punctuation">&gt;</span></span> <span class="token function">getServices</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">String</span> servicePath <span class="token operator">=</span> <span class="token class-name">LeisureConstant</span><span class="token punctuation">.</span>ZK_SERVICE_PATH <span class="token operator">+</span> <span class="token class-name">LeisureConstant</span><span class="token punctuation">.</span>PATH_DELIMITER <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token string">&quot;/service&quot;</span><span class="token punctuation">;</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> children <span class="token operator">=</span> zkClient<span class="token punctuation">.</span><span class="token function">getChildren</span><span class="token punctuation">(</span>servicePath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">ofNullable</span><span class="token punctuation">(</span>children<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">orElse</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>str <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
+            <span class="token class-name">String</span> deCh <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                deCh <span class="token operator">=</span> <span class="token class-name">URLDecoder</span><span class="token punctuation">.</span><span class="token function">decode</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> <span class="token class-name">LeisureConstant</span><span class="token punctuation">.</span>UTF_8<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">UnsupportedEncodingException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">return</span> JSON<span class="token punctuation">.</span><span class="token function">parseObject</span><span class="token punctuation">(</span>deCh<span class="token punctuation">,</span> <span class="token class-name">Service</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span><span class="token class-name">Collectors</span><span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>服务发现者使用Zookeeper来实现，通过ZkClient我们很容易发现已经注册在ZK上的服务。当然我们也可以使用其他组件作为注册中心，例如Redis。</p> <h5 id="_3-3-2-2-网络客户端"><a href="#_3-3-2-2-网络客户端" class="header-anchor">#</a> 3.3.2.2 网络客户端</h5> <div class="language-java extra-class"><pre class="language-java"><code><span class="token comment">/**
+ * 网络请求客户端，定义网络请求规范
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">NetClient</span> <span class="token punctuation">{</span>
+    <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">sendRequest</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">,</span> <span class="token class-name">Service</span> service<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * Netty网络请求客户端，定义通过Netty实现网络请求的细则。
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">NettyNetClient</span> <span class="token keyword">implements</span> <span class="token class-name">NetClient</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">LoggerFactory</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token class-name">NettyNetClient</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 发送请求
+     *
+     * @param data    请求数据
+     * @param service 服务信息
+     * @return 响应数据
+     * @throws InterruptedException 异常
+     */</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">sendRequest</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">,</span> <span class="token class-name">Service</span> service<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+        <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> addInfoArray <span class="token operator">=</span> service<span class="token punctuation">.</span><span class="token function">getAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">&quot;:&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> serverAddress <span class="token operator">=</span> addInfoArray<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> serverPort <span class="token operator">=</span> addInfoArray<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">SendHandler</span> sendHandler <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SendHandler</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> respData<span class="token punctuation">;</span>
+        <span class="token comment">// 配置客户端</span>
+        <span class="token class-name">EventLoopGroup</span> group <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token class-name">Bootstrap</span> b <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Bootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            b<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>group<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token class-name">NioSocketChannel</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span><span class="token class-name">ChannelOption</span><span class="token punctuation">.</span>TCP_NODELAY<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+                    <span class="token punctuation">.</span><span class="token function">handler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ChannelInitializer</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">SocketChannel</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                        <span class="token annotation punctuation">@Override</span>
+                        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">initChannel</span><span class="token punctuation">(</span><span class="token class-name">SocketChannel</span> ch<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                            <span class="token class-name">ChannelPipeline</span> p <span class="token operator">=</span> ch<span class="token punctuation">.</span><span class="token function">pipeline</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            p<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span>sendHandler<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 启动客户端连接</span>
+            b<span class="token punctuation">.</span><span class="token function">connect</span><span class="token punctuation">(</span>serverAddress<span class="token punctuation">,</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>serverPort<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            respData <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span> sendHandler<span class="token punctuation">.</span><span class="token function">rspData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;SendRequest get reply: {}&quot;</span><span class="token punctuation">,</span> respData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 释放线程组资源</span>
+            group<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token keyword">return</span> respData<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * 发送处理类，定义Netty入站处理细则
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SendHandler</span> <span class="token keyword">extends</span> <span class="token class-name">ChannelInboundHandlerAdapter</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">LoggerFactory</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token class-name">SendHandler</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">CountDownLatch</span> cdl<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Object</span> readMsg <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">SendHandler</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        cdl <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CountDownLatch</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>data <span class="token operator">=</span> data<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * 当连接服务端成功后，发送请求数据
+     *
+     * @param ctx 通道上下文
+     */</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">channelActive</span><span class="token punctuation">(</span><span class="token class-name">ChannelHandlerContext</span> ctx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;Successful connection to server：{}&quot;</span><span class="token punctuation">,</span> ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">ByteBuf</span> reqBuf <span class="token operator">=</span> <span class="token class-name">Unpooled</span><span class="token punctuation">.</span><span class="token function">buffer</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        reqBuf<span class="token punctuation">.</span><span class="token function">writeBytes</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;Client sends message：{}&quot;</span><span class="token punctuation">,</span> reqBuf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ctx<span class="token punctuation">.</span><span class="token function">writeAndFlush</span><span class="token punctuation">(</span>reqBuf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * 读取数据，数据读取完毕释放CD锁
+     *
+     * @param ctx 上下文
+     * @param msg ByteBuf
+     */</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">channelRead</span><span class="token punctuation">(</span><span class="token class-name">ChannelHandlerContext</span> ctx<span class="token punctuation">,</span> <span class="token class-name">Object</span> msg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;Client reads message: {}&quot;</span><span class="token punctuation">,</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">ByteBuf</span> msgBuf <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ByteBuf</span><span class="token punctuation">)</span> msg<span class="token punctuation">;</span>
+        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> resp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>msgBuf<span class="token punctuation">.</span><span class="token function">readableBytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        msgBuf<span class="token punctuation">.</span><span class="token function">readBytes</span><span class="token punctuation">(</span>resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        readMsg <span class="token operator">=</span> resp<span class="token punctuation">;</span>
+        cdl<span class="token punctuation">.</span><span class="token function">countDown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * 等待读取数据完成
+     *
+     * @return 响应数据
+     * @throws InterruptedException 异常
+     */</span>
+    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">rspData</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+        cdl<span class="token punctuation">.</span><span class="token function">await</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> readMsg<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">channelReadComplete</span><span class="token punctuation">(</span><span class="token class-name">ChannelHandlerContext</span> ctx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        ctx<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">exceptionCaught</span><span class="token punctuation">(</span><span class="token class-name">ChannelHandlerContext</span> ctx<span class="token punctuation">,</span> <span class="token class-name">Throwable</span> cause<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// Close the connection when an exception is raised.</span>
+        cause<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">&quot;Exception occurred：{}&quot;</span><span class="token punctuation">,</span> cause<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ctx<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在这里我们使用Netty来实现网络请求客户端，当然也可以使用Mina。网络请求客户端能连接远程服务端，并将编组好的请求数据发送给服务端，待服务端处理好后，又将服务端的响应数据返回给客户端。</p> <h5 id="_3-3-2-3-服务代理"><a href="#_3-3-2-3-服务代理" class="header-anchor">#</a> 3.3.2.3 服务代理</h5> <div class="language-java extra-class"><pre class="language-java"><code><span class="token comment">/**
+ * 客户端代理工厂：用于创建远程服务代理类
+ * 封装编组请求、请求发送、编组响应等操作。
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ClientProxyFactory</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token class-name">ServiceDiscoverer</span> serviceDiscoverer<span class="token punctuation">;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">MessageProtocol</span><span class="token punctuation">&gt;</span></span> supportMessageProtocols<span class="token punctuation">;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">NetClient</span> netClient<span class="token punctuation">;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Class</span><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> objectCache <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 通过Java动态代理获取服务代理类
+     *
+     * @param clazz 被代理类Class
+     * @param &lt;T&gt;   泛型
+     * @return 服务代理类
+     */</span>
+    <span class="token annotation punctuation">@SuppressWarnings</span><span class="token punctuation">(</span><span class="token string">&quot;unchecked&quot;</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token class-name">T</span> <span class="token function">getProxy</span><span class="token punctuation">(</span><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> clazz<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span> <span class="token keyword">this</span><span class="token punctuation">.</span>objectCache<span class="token punctuation">.</span><span class="token function">computeIfAbsent</span><span class="token punctuation">(</span>clazz<span class="token punctuation">,</span>
+                cls <span class="token operator">-&gt;</span> <span class="token function">newProxyInstance</span><span class="token punctuation">(</span>cls<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span>cls<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">ClientInvocationHandler</span><span class="token punctuation">(</span>cls<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// getter setter ...</span>
+
+    <span class="token comment">/**
+     * 客户端服务代理类invoke函数细节实现
+     */</span>
+    <span class="token keyword">private</span> <span class="token keyword">class</span> <span class="token class-name">ClientInvocationHandler</span> <span class="token keyword">implements</span> <span class="token class-name">InvocationHandler</span> <span class="token punctuation">{</span>
+        <span class="token keyword">private</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> clazz<span class="token punctuation">;</span>
+
+        <span class="token keyword">private</span> <span class="token class-name">Random</span> random <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">public</span> <span class="token class-name">ClientInvocationHandler</span><span class="token punctuation">(</span><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> clazz<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>clazz <span class="token operator">=</span> clazz<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">invoke</span><span class="token punctuation">(</span><span class="token class-name">Object</span> proxy<span class="token punctuation">,</span> <span class="token class-name">Method</span> method<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">&quot;toString&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> proxy<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">&quot;hashCode&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token comment">// 1、获得服务信息</span>
+            <span class="token class-name">String</span> serviceName <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>clazz<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Service</span><span class="token punctuation">&gt;</span></span> services <span class="token operator">=</span> serviceDiscoverer<span class="token punctuation">.</span><span class="token function">getServices</span><span class="token punctuation">(</span>serviceName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>services <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> services<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">LeisureException</span><span class="token punctuation">(</span><span class="token string">&quot;No provider available!&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token comment">// 随机选择一个服务提供者（软负载均衡）</span>
+            <span class="token class-name">Service</span> service <span class="token operator">=</span> services<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>random<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span>services<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 2、构造request对象</span>
+            <span class="token class-name">LeisureRequest</span> req <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LeisureRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            req<span class="token punctuation">.</span><span class="token function">setServiceName</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            req<span class="token punctuation">.</span><span class="token function">setMethod</span><span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            req<span class="token punctuation">.</span><span class="token function">setParameterTypes</span><span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">getParameterTypes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            req<span class="token punctuation">.</span><span class="token function">setParameters</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 3、协议层编组</span>
+            <span class="token comment">// 获得该方法对应的协议</span>
+            <span class="token class-name">MessageProtocol</span> protocol <span class="token operator">=</span> supportMessageProtocols<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>service<span class="token punctuation">.</span><span class="token function">getProtocol</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 编组请求</span>
+            <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data <span class="token operator">=</span> protocol<span class="token punctuation">.</span><span class="token function">marshallingRequest</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 4、调用网络层发送请求</span>
+            <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> repData <span class="token operator">=</span> netClient<span class="token punctuation">.</span><span class="token function">sendRequest</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> service<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 5解组响应消息</span>
+            <span class="token class-name">LeisureResponse</span> rsp <span class="token operator">=</span> protocol<span class="token punctuation">.</span><span class="token function">unmarshallingResponse</span><span class="token punctuation">(</span>repData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 6、结果处理</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>rsp<span class="token punctuation">.</span><span class="token function">getException</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> rsp<span class="token punctuation">.</span><span class="token function">getException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">return</span> rsp<span class="token punctuation">.</span><span class="token function">getReturnValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>服务代理类由客户端代理工厂类产生，代理方式是基于Java的动态代理。在处理类ClientInvocationHandler的invoke函数中，定义了一系列的操作，包括获取服务、选择服务提供者、构造请求对象、编组请求对象、网络请求客户端发送请求、解组响应消息、异常处理等。</p> <h5 id="_3-3-2-4-消息协议"><a href="#_3-3-2-4-消息协议" class="header-anchor">#</a> 3.3.2.4 消息协议</h5> <div class="language-java extra-class"><pre class="language-java"><code><span class="token comment">/**
+ * 消息协议，定义编组请求、解组请求、编组响应、解组响应规范
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">MessageProtocol</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">/**
+     * 编组请求
+     *
+     * @param req 请求信息
+     * @return 请求字节数组
+     * @throws Exception 编组请求异常
+     */</span>
+    <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">marshallingRequest</span><span class="token punctuation">(</span><span class="token class-name">LeisureRequest</span> req<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 解组请求
+     *
+     * @param data 请求字节数组
+     * @return 请求信息
+     * @throws Exception 解组请求异常
+     */</span>
+    <span class="token class-name">LeisureRequest</span> <span class="token function">unmarshallingRequest</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 编组响应
+     *
+     * @param rsp 响应信息
+     * @return 响应字节数组
+     * @throws Exception 编组响应异常
+     */</span>
+    <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">marshallingResponse</span><span class="token punctuation">(</span><span class="token class-name">LeisureResponse</span> rsp<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 解组响应
+     *
+     * @param data 响应字节数组
+     * @return 响应信息
+     * @throws Exception 解组响应异常
+     */</span>
+    <span class="token class-name">LeisureResponse</span> <span class="token function">unmarshallingResponse</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * Java序列化消息协议
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">JavaSerializeMessageProtocol</span> <span class="token keyword">implements</span> <span class="token class-name">MessageProtocol</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">serialize</span><span class="token punctuation">(</span><span class="token class-name">Object</span> obj<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token class-name">ByteArrayOutputStream</span> bout <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ByteArrayOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">ObjectOutputStream</span> out <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ObjectOutputStream</span><span class="token punctuation">(</span>bout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        out<span class="token punctuation">.</span><span class="token function">writeObject</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> bout<span class="token punctuation">.</span><span class="token function">toByteArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">marshallingRequest</span><span class="token punctuation">(</span><span class="token class-name">LeisureRequest</span> req<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">serialize</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">LeisureRequest</span> <span class="token function">unmarshallingRequest</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token class-name">ObjectInputStream</span> in <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ObjectInputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ByteArrayInputStream</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token class-name">LeisureRequest</span><span class="token punctuation">)</span> in<span class="token punctuation">.</span><span class="token function">readObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">marshallingResponse</span><span class="token punctuation">(</span><span class="token class-name">LeisureResponse</span> rsp<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">serialize</span><span class="token punctuation">(</span>rsp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">LeisureResponse</span> <span class="token function">unmarshallingResponse</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token class-name">ObjectInputStream</span> in <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ObjectInputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ByteArrayInputStream</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token class-name">LeisureResponse</span><span class="token punctuation">)</span> in<span class="token punctuation">.</span><span class="token function">readObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>消息协议主要是定义了客户端如何<strong>编组请求</strong>、<strong>解组响应</strong>，服务端如何<strong>解组请求</strong>、<strong>编组响应</strong>这四个操作规范。本文提供了Java序列化与反序列化的实现，感兴趣的读者可以基于其他序列化技术实现其他消息协议（偷偷说一句：Java的序列化性能很不理想）。</p> <h3 id="_3-4-服务端编写"><a href="#_3-4-服务端编写" class="header-anchor">#</a> 3.4 服务端编写</h3> <h4 id="_3-4-1-服务端需要做什么"><a href="#_3-4-1-服务端需要做什么" class="header-anchor">#</a> 3.4.1 服务端需要做什么？</h4> <p>首先，服务端要提供远程服务，必须具备<strong>服务注册及暴露</strong>的能力；在这之后，还需要开启<strong>网络服务</strong>，供客户端连接。有些项目可能既是服务提供者，又是服务消费者，那什么时候开启服务，什么时候注入服务呢？这里我们引入一个<strong>RPC处理者</strong>的概念，由它来帮我们开启服务，以及注入服务。</p> <h4 id="_3-4-3-具体实现"><a href="#_3-4-3-具体实现" class="header-anchor">#</a> 3.4.3 具体实现</h4> <p>先看看服务端的代码结构：</p> <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pdG9hay5naXRlZS5pby9ibG9nLWFydGljbGVzL2phdmEvaW1hZ2VzLzUucG5n?x-oss-process=image/format,png" alt="image-20200722234608540"></p> <p>服务端做的事情也很简单，注册服务并暴露服务，然后开启网络服务；如果服务端也是消费者，则注入远程服务。</p> <p>服务注册和服务注入依赖两个自定义注解来实现：</p> <ul><li>@Service：注册服务</li> <li>@InjectService：注入服务</li></ul> <p>下面是他们的实现代码：</p> <div class="language-java extra-class"><pre class="language-java"><code><span class="token comment">/**
+ * 被该注解标记的服务可提供远程RPC访问的能力
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span>TYPE<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span>RUNTIME<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Documented</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">Service</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * 该注解用于注入远程服务
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span>FIELD<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span>RUNTIME<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Documented</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">InjectService</span> <span class="token punctuation">{</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><h5 id="_3-4-3-1-服务注册-暴露"><a href="#_3-4-3-1-服务注册-暴露" class="header-anchor">#</a> 3.4.3.1 服务注册(暴露)</h5> <div class="language-java extra-class"><pre class="language-java"><code><span class="token comment">/**
+ * 服务注册器，定义服务注册规范
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">ServiceRegister</span> <span class="token punctuation">{</span>
+    <span class="token keyword">void</span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token class-name">ServiceObject</span> so<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+    <span class="token class-name">ServiceObject</span> <span class="token function">getServiceObject</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * 默认服务注册器
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DefaultServiceRegister</span> <span class="token keyword">implements</span> <span class="token class-name">ServiceRegister</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">ServiceObject</span><span class="token punctuation">&gt;</span></span> serviceMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">protected</span> <span class="token class-name">String</span> protocol<span class="token punctuation">;</span>
+    <span class="token keyword">protected</span> <span class="token class-name">Integer</span> port<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token class-name">ServiceObject</span> so<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>so <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalArgumentException</span><span class="token punctuation">(</span><span class="token string">&quot;Parameter cannot be empty.&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>serviceMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>so<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> so<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">ServiceObject</span> <span class="token function">getServiceObject</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>serviceMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * Zookeeper服务注册器，提供服务注册、服务暴露的能力
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ZookeeperExportServiceRegister</span> <span class="token keyword">extends</span> <span class="token class-name">DefaultServiceRegister</span> <span class="token keyword">implements</span> <span class="token class-name">ServiceRegister</span> <span class="token punctuation">{</span>
+    <span class="token comment">/**
+     * Zk客户端
+     */</span>
+    <span class="token keyword">private</span> <span class="token class-name">ZkClient</span> client<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token class-name">ZookeeperExportServiceRegister</span><span class="token punctuation">(</span><span class="token class-name">String</span> zkAddress<span class="token punctuation">,</span> <span class="token class-name">Integer</span> port<span class="token punctuation">,</span> <span class="token class-name">String</span> protocol<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        client <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ZkClient</span><span class="token punctuation">(</span>zkAddress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        client<span class="token punctuation">.</span><span class="token function">setZkSerializer</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ZookeeperSerializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>port <span class="token operator">=</span> port<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>protocol <span class="token operator">=</span> protocol<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * 服务注册
+     *
+     * @param so 服务持有者
+     * @throws Exception 注册异常
+     */</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token class-name">ServiceObject</span> so<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>so<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Service</span> service <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Service</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> host <span class="token operator">=</span> <span class="token class-name">InetAddress</span><span class="token punctuation">.</span><span class="token function">getLocalHost</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHostAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> address <span class="token operator">=</span> host <span class="token operator">+</span> <span class="token string">&quot;:&quot;</span> <span class="token operator">+</span> port<span class="token punctuation">;</span>
+        service<span class="token punctuation">.</span><span class="token function">setAddress</span><span class="token punctuation">(</span>address<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        service<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span>so<span class="token punctuation">.</span><span class="token function">getClazz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        service<span class="token punctuation">.</span><span class="token function">setProtocol</span><span class="token punctuation">(</span>protocol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">exportService</span><span class="token punctuation">(</span>service<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * 服务暴露
+     *
+     * @param serviceResource 需要暴露的服务信息
+     */</span>
+    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">exportService</span><span class="token punctuation">(</span><span class="token class-name">Service</span> serviceResource<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">String</span> serviceName <span class="token operator">=</span> serviceResource<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> uri <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>serviceResource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            uri <span class="token operator">=</span> <span class="token class-name">URLEncoder</span><span class="token punctuation">.</span><span class="token function">encode</span><span class="token punctuation">(</span>uri<span class="token punctuation">,</span> UTF_8<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">UnsupportedEncodingException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token class-name">String</span> servicePath <span class="token operator">=</span> ZK_SERVICE_PATH <span class="token operator">+</span> PATH_DELIMITER <span class="token operator">+</span> serviceName <span class="token operator">+</span> <span class="token string">&quot;/service&quot;</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>client<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span>servicePath<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            client<span class="token punctuation">.</span><span class="token function">createPersistent</span><span class="token punctuation">(</span>servicePath<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token class-name">String</span> uriPath <span class="token operator">=</span> servicePath <span class="token operator">+</span> PATH_DELIMITER <span class="token operator">+</span> uri<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>client<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span>uriPath<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            client<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>uriPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        client<span class="token punctuation">.</span><span class="token function">createEphemeral</span><span class="token punctuation">(</span>uriPath<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>这个过程其实没啥好说的，就是将指定ServiceObject对象序列化后保存到ZK上，供客户端发现。同时会将服务对象缓存起来，在客户端调用服务时，通过缓存的ServiceObject对象反射指定服务，调用方法。</p> <h5 id="_3-4-3-2-网络服务"><a href="#_3-4-3-2-网络服务" class="header-anchor">#</a> 3.4.3.2 网络服务</h5> <div class="language-java extra-class"><pre class="language-java"><code><span class="token comment">/**
+ * RPC服务端抽象类
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">RpcServer</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">/**
+     * 服务端口
+     */</span>
+    <span class="token keyword">protected</span> <span class="token keyword">int</span> port<span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 服务协议
+     */</span>
+    <span class="token keyword">protected</span> <span class="token class-name">String</span> protocol<span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 请求处理者
+     */</span>
+    <span class="token keyword">protected</span> <span class="token class-name">RequestHandler</span> handler<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">RpcServer</span><span class="token punctuation">(</span><span class="token keyword">int</span> port<span class="token punctuation">,</span> <span class="token class-name">String</span> protocol<span class="token punctuation">,</span> <span class="token class-name">RequestHandler</span> handler<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>port <span class="token operator">=</span> port<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>protocol <span class="token operator">=</span> protocol<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>handler <span class="token operator">=</span> handler<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">/**
+     * 开启服务
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">void</span> <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 停止服务
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">void</span> <span class="token function">stop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token comment">// getter setter ...</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * Netty RPC服务端，提供Netty网络服务开启、关闭的能力
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">NettyRpcServer</span> <span class="token keyword">extends</span> <span class="token class-name">RpcServer</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">LoggerFactory</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token class-name">NettyRpcServer</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">Channel</span> channel<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">NettyRpcServer</span><span class="token punctuation">(</span><span class="token keyword">int</span> port<span class="token punctuation">,</span> <span class="token class-name">String</span> protocol<span class="token punctuation">,</span> <span class="token class-name">RequestHandler</span> handler<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>port<span class="token punctuation">,</span> protocol<span class="token punctuation">,</span> handler<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 配置服务器</span>
+        <span class="token class-name">EventLoopGroup</span> bossGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">EventLoopGroup</span> workerGroup <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">NioEventLoopGroup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token class-name">ServerBootstrap</span> b <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerBootstrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            b<span class="token punctuation">.</span><span class="token function">group</span><span class="token punctuation">(</span>bossGroup<span class="token punctuation">,</span> workerGroup<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token class-name">NioServerSocketChannel</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span><span class="token class-name">ChannelOption</span><span class="token punctuation">.</span>SO_BACKLOG<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span>
+                    <span class="token punctuation">.</span><span class="token function">handler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">LoggingHandler</span><span class="token punctuation">(</span><span class="token class-name">LogLevel</span><span class="token punctuation">.</span>INFO<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">childHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ChannelInitializer</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">SocketChannel</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token annotation punctuation">@Override</span>
+                <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">initChannel</span><span class="token punctuation">(</span><span class="token class-name">SocketChannel</span> ch<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    <span class="token class-name">ChannelPipeline</span> p <span class="token operator">=</span> ch<span class="token punctuation">.</span><span class="token function">pipeline</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    p<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ChannelRequestHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 启动服务</span>
+            <span class="token class-name">ChannelFuture</span> f <span class="token operator">=</span> b<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;Server started successfully.&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            channel <span class="token operator">=</span> f<span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 等待服务通道关闭</span>
+            f<span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">closeFuture</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 释放线程组资源</span>
+            bossGroup<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            workerGroup<span class="token punctuation">.</span><span class="token function">shutdownGracefully</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">stop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>channel<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">class</span> <span class="token class-name">ChannelRequestHandler</span> <span class="token keyword">extends</span> <span class="token class-name">ChannelInboundHandlerAdapter</span> <span class="token punctuation">{</span>
+
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">channelActive</span><span class="token punctuation">(</span><span class="token class-name">ChannelHandlerContext</span> ctx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;Channel active：{}&quot;</span><span class="token punctuation">,</span> ctx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">channelRead</span><span class="token punctuation">(</span><span class="token class-name">ChannelHandlerContext</span> ctx<span class="token punctuation">,</span> <span class="token class-name">Object</span> msg<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+            logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;The server receives a message: {}&quot;</span><span class="token punctuation">,</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">ByteBuf</span> msgBuf <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ByteBuf</span><span class="token punctuation">)</span> msg<span class="token punctuation">;</span>
+            <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> req <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span>msgBuf<span class="token punctuation">.</span><span class="token function">readableBytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+            msgBuf<span class="token punctuation">.</span><span class="token function">readBytes</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> res <span class="token operator">=</span> handler<span class="token punctuation">.</span><span class="token function">handleRequest</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;Send response：{}&quot;</span><span class="token punctuation">,</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">ByteBuf</span> respBuf <span class="token operator">=</span> <span class="token class-name">Unpooled</span><span class="token punctuation">.</span><span class="token function">buffer</span><span class="token punctuation">(</span>res<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            respBuf<span class="token punctuation">.</span><span class="token function">writeBytes</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            ctx<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>respBuf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">channelReadComplete</span><span class="token punctuation">(</span><span class="token class-name">ChannelHandlerContext</span> ctx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            ctx<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">exceptionCaught</span><span class="token punctuation">(</span><span class="token class-name">ChannelHandlerContext</span> ctx<span class="token punctuation">,</span> <span class="token class-name">Throwable</span> cause<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// Close the connection when an exception is raised.</span>
+            cause<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">&quot;Exception occurred：{}&quot;</span><span class="token punctuation">,</span> cause<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            ctx<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * 请求处理者，提供解组请求、编组响应等操作
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">RequestHandler</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token class-name">MessageProtocol</span> protocol<span class="token punctuation">;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">ServiceRegister</span> serviceRegister<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">RequestHandler</span><span class="token punctuation">(</span><span class="token class-name">MessageProtocol</span> protocol<span class="token punctuation">,</span> <span class="token class-name">ServiceRegister</span> serviceRegister<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>protocol <span class="token operator">=</span> protocol<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>serviceRegister <span class="token operator">=</span> serviceRegister<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">handleRequest</span><span class="token punctuation">(</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> data<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 1、解组消息</span>
+        <span class="token class-name">LeisureRequest</span> req <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>protocol<span class="token punctuation">.</span><span class="token function">unmarshallingRequest</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 2、查找服务对象</span>
+        <span class="token class-name">ServiceObject</span> so <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>serviceRegister<span class="token punctuation">.</span><span class="token function">getServiceObject</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span><span class="token function">getServiceName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">LeisureResponse</span> rsp <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>so <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            rsp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LeisureResponse</span><span class="token punctuation">(</span><span class="token class-name">LeisureStatus</span><span class="token punctuation">.</span>NOT_FOUND<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 3、反射调用对应的过程方法</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                <span class="token class-name">Method</span> m <span class="token operator">=</span> so<span class="token punctuation">.</span><span class="token function">getClazz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> req<span class="token punctuation">.</span><span class="token function">getParameterTypes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">Object</span> returnValue <span class="token operator">=</span> m<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>so<span class="token punctuation">.</span><span class="token function">getObj</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> req<span class="token punctuation">.</span><span class="token function">getParameters</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                rsp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LeisureResponse</span><span class="token punctuation">(</span><span class="token class-name">LeisureStatus</span><span class="token punctuation">.</span>SUCCESS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                rsp<span class="token punctuation">.</span><span class="token function">setReturnValue</span><span class="token punctuation">(</span>returnValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">NoSuchMethodException</span> <span class="token operator">|</span> <span class="token class-name">SecurityException</span> <span class="token operator">|</span> <span class="token class-name">IllegalAccessException</span> <span class="token operator">|</span> <span class="token class-name">IllegalArgumentException</span>
+                    <span class="token operator">|</span> <span class="token class-name">InvocationTargetException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                rsp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LeisureResponse</span><span class="token punctuation">(</span><span class="token class-name">LeisureStatus</span><span class="token punctuation">.</span>ERROR<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                rsp<span class="token punctuation">.</span><span class="token function">setException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 4、编组响应消息</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>protocol<span class="token punctuation">.</span><span class="token function">marshallingResponse</span><span class="token punctuation">(</span>rsp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+	<span class="token comment">// getter setter ...</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>网络服务定义了启动服务的细则，以及如何处理客户端发来的请求。</p> <h5 id="_3-4-3-3-rpc处理者"><a href="#_3-4-3-3-rpc处理者" class="header-anchor">#</a> 3.4.3.3 RPC处理者</h5> <div class="language-java extra-class"><pre class="language-java"><code><span class="token comment">/**
+ * RPC处理者，支持服务启动暴露、自动注入Service
+ *
+ * @author 东方雨倾
+ * @since 1.0.0
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DefaultRpcProcessor</span> <span class="token keyword">implements</span> <span class="token class-name">ApplicationListener</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">ContextRefreshedEvent</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Resource</span>
+    <span class="token keyword">private</span> <span class="token class-name">ClientProxyFactory</span> clientProxyFactory<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Resource</span>
+    <span class="token keyword">private</span> <span class="token class-name">ServiceRegister</span> serviceRegister<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Resource</span>
+    <span class="token keyword">private</span> <span class="token class-name">RpcServer</span> rpcServer<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onApplicationEvent</span><span class="token punctuation">(</span><span class="token class-name">ContextRefreshedEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">Objects</span><span class="token punctuation">.</span><span class="token function">isNull</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">ApplicationContext</span> context <span class="token operator">=</span> event<span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 开启服务</span>
+            <span class="token function">startServer</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token comment">// 注入Service</span>
+            <span class="token function">injectService</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">startServer</span><span class="token punctuation">(</span><span class="token class-name">ApplicationContext</span> context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> beans <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getBeansWithAnnotation</span><span class="token punctuation">(</span><span class="token class-name">Service</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>beans<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">boolean</span> startServerFlag <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Object</span> obj <span class="token operator">:</span> beans<span class="token punctuation">.</span><span class="token function">values</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                    <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> clazz <span class="token operator">=</span> obj<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">[</span><span class="token punctuation">]</span> interfaces <span class="token operator">=</span> clazz<span class="token punctuation">.</span><span class="token function">getInterfaces</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token class-name">ServiceObject</span> so<span class="token punctuation">;</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">(</span>interfaces<span class="token punctuation">.</span>length <span class="token operator">!=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                        <span class="token class-name">Service</span> service <span class="token operator">=</span> clazz<span class="token punctuation">.</span><span class="token function">getAnnotation</span><span class="token punctuation">(</span><span class="token class-name">Service</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token class-name">String</span> value <span class="token operator">=</span> service<span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span>value<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">&quot;&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                            startServerFlag <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+                            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">UnsupportedOperationException</span><span class="token punctuation">(</span><span class="token string">&quot;The exposed interface is not specific with '&quot;</span> <span class="token operator">+</span> obj<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">&quot;'&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">}</span>
+                        so <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServiceObject</span><span class="token punctuation">(</span>value<span class="token punctuation">,</span> <span class="token class-name">Class</span><span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">,</span> obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                        <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> superClass <span class="token operator">=</span> interfaces<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+                        so <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServiceObject</span><span class="token punctuation">(</span>superClass<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> superClass<span class="token punctuation">,</span> obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span>
+                    serviceRegister<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>so<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>startServerFlag<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                rpcServer<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">injectService</span><span class="token punctuation">(</span><span class="token class-name">ApplicationContext</span> context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> names <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getBeanDefinitionNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">String</span> name <span class="token operator">:</span> names<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> clazz <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getType</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">Objects</span><span class="token punctuation">.</span><span class="token function">isNull</span><span class="token punctuation">(</span>clazz<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span>
+            <span class="token class-name">Field</span><span class="token punctuation">[</span><span class="token punctuation">]</span> fields <span class="token operator">=</span> clazz<span class="token punctuation">.</span><span class="token function">getDeclaredFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Field</span> field <span class="token operator">:</span> fields<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token class-name">InjectService</span> injectLeisure <span class="token operator">=</span> field<span class="token punctuation">.</span><span class="token function">getAnnotation</span><span class="token punctuation">(</span><span class="token class-name">InjectService</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">Objects</span><span class="token punctuation">.</span><span class="token function">isNull</span><span class="token punctuation">(</span>injectLeisure<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span>
+                <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> fieldClass <span class="token operator">=</span> field<span class="token punctuation">.</span><span class="token function">getType</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token class-name">Object</span> object <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                field<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                    field<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> clientProxyFactory<span class="token punctuation">.</span><span class="token function">getProxy</span><span class="token punctuation">(</span>fieldClass<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IllegalAccessException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>DefaultRpcProcessor实现了ApplicationListener，并监听了ContextRefreshedEvent事件，其效果就是在Spring启动完毕过后会收到一个事件通知，基于这个机制，就可以在这里开启服务，以及注入服务。因为一切已经准备就绪了，所需要的资源都是OK的。</p> <h2 id="四、使用rpc框架"><a href="#四、使用rpc框架" class="header-anchor">#</a> 四、使用RPC框架</h2> <p>框架一个很重要的特性就是要使用简单，使用该框架只需要一个条件和四个步骤即可。</p> <h3 id="_4-1-一个条件"><a href="#_4-1-一个条件" class="header-anchor">#</a> 4.1 一个条件</h3> <p>需要准备一个Zookeeper作为注册中心，单节点即可。</p> <h3 id="_4-2-步骤一"><a href="#_4-2-步骤一" class="header-anchor">#</a> 4.2 步骤一</h3> <p>引入Maven依赖：</p> <div class="language-xml extra-class"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>wang.leisure<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>leisure-rpc-spring-boot-starter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.0.0-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><blockquote><p>不知道如何获得依赖的读者，请在源码下载后，进入项目目录下（pom.xml文件所在位置），执行 mvn install命令，即可在本地仓库生成maven依赖。</p></blockquote> <h3 id="_4-3-步骤二"><a href="#_4-3-步骤二" class="header-anchor">#</a> 4.3 步骤二</h3> <p>在你的项目配置文件（application.properties）中配置注册中心地址，例如：</p> <div class="language- extra-class"><pre class="language-text"><code>leisure.rpc.register-address=192.168.199.241:2181
+</code></pre></div><h3 id="_4-4-步骤三"><a href="#_4-4-步骤三" class="header-anchor">#</a> 4.4 步骤三</h3> <p>将你的远程服务使用@Service注解，例如：</p> <div class="language-java extra-class"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token namespace">wang<span class="token punctuation">.</span>leisure<span class="token punctuation">.</span>rpc<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Service</span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">UserService</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">ApiResult</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">&gt;</span></span> <span class="token function">getUser</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">User</span> user <span class="token operator">=</span> <span class="token function">getFromDbOrCache</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token class-name">ApiResult</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">User</span> <span class="token function">getFromDbOrCache</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token string">&quot;东方雨倾&quot;</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">&quot;https://leisure.wang&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3 id="_4-5-步骤四"><a href="#_4-5-步骤四" class="header-anchor">#</a> 4.5 步骤四</h3> <p>使用注解@InjectService注入远程服务，例如：</p> <div class="language-java extra-class"><pre class="language-java"><code><span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">&quot;/index/&quot;</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">IndexController</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@InjectService</span>
+    <span class="token keyword">private</span> <span class="token class-name">UserService</span> userService<span class="token punctuation">;</span>
+
+    <span class="token comment">/**
+     * 获取用户信息
+     * http://localhost:8080/index/getUser?id=1
+     *
+     * @param id 用户id
+     * @return 用户信息
+     */</span>
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">&quot;getUser&quot;</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">ApiResult</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">&gt;</span></span> <span class="token function">getUser</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> userService<span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="五、源码下载"><a href="#五、源码下载" class="header-anchor">#</a> 五、源码下载</h2> <p><a href="https://github.com/OakWang/leisure-rpc-spring-boot-starter.git" target="_blank" rel="noopener noreferrer">框架源码：leisure-rpc-spring-boot-starter<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p><a href="https://github.com/OakWang/leisure-rpc-example.git" target="_blank" rel="noopener noreferrer">示例源码：leisure-rpc-example<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p>为方便读者看到效果，笔者也简单的编写了一个示例项目，可以下载下来试试。如果源码对你有一丁点的帮助，希望点个小星星支持一下哦。</p> <h2 id="六、总结"><a href="#六、总结" class="header-anchor">#</a> 六、总结</h2> <p>希望读者能够真正动手去试一试，只有实践了才能知道里面的运作逻辑。笔者也是花了两个星期才把代码跟文章整理好，并不是因为这个东西难，而是因为没时间，苦逼的程序G早上七点起床，晚上10点左右回家，确实没啥时间搞这些，哈哈哈。如果文章对你有帮助，希望多多支持。</p></div></div>  <div class="page-edit"><div class="edit-link"><a href="https://github.com/oneisx/oneisx.github.io/edit/master/docs/10.Java/01.看了这篇你就会手写RPC框架了.md" target="_blank" rel="noopener noreferrer">编辑</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="tags"><a href="/tags/?tag=RPC" title="标签">#RPC</a></div> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">2022/01/09, 11:35:17</span></div></div> <div class="page-nav-wapper"><!----> <!----></div></div> <div class="article-list"><div class="article-title"><a href="/archives/" class="iconfont icon-bi">最近更新</a></div> <div class="article-wrapper"><dl><dd>01</dd> <dt><a href="/pages/afca8c/"><div>
+            Git常用命令
+            <!----></div></a> <span class="date">01-07</span></dt></dl><dl><dd>02</dd> <dt><a href="/pages/8dd674/"><div>
+            Linux常用命令
+            <!----></div></a> <span class="date">01-07</span></dt></dl><dl><dd>03</dd> <dt><a href="/pages/10ce89/"><div>
+            快速配置SSH免密登录
+            <!----></div></a> <span class="date">01-07</span></dt></dl> <dl><dd></dd> <dt><a href="/archives/" class="more">更多文章&gt;</a></dt></dl></div></div></main></div> <div class="footer"><div class="icons"><a href="mailto:1329166894@qq.com" title="发邮件" target="_blank" class="iconfont icon-youjian"></a><a href="https://github.com/oneisx" title="GitHub" target="_blank" class="iconfont icon-github"></a><a href="https://music.163.com/#/playlist?id=115957627" title="听音乐" target="_blank" class="iconfont icon-erji"></a></div> 
+  Theme by
+  <a href="https://github.com/xugaoyi/vuepress-theme-vdoing" target="_blank" title="本站主题">Vdoing</a> 
+    | Copyright © 2022-2022
+    <span>oneisx | <a href="" target="_blank">Apache License</a></span></div> <div class="buttons"><div title="返回顶部" class="button blur go-to-top iconfont icon-fanhuidingbu" style="display:none;"></div> <div title="去评论" class="button blur go-to-comment iconfont icon-pinglun" style="display:none;"></div> <div title="主题模式" class="button blur theme-mode-but iconfont icon-zhuti"><ul class="select-box" style="display:none;"><li class="iconfont icon-zidong">
+          跟随系统
+        </li><li class="iconfont icon-rijianmoshi">
+          浅色模式
+        </li><li class="iconfont icon-yejianmoshi">
+          深色模式
+        </li><li class="iconfont icon-yuedu">
+          阅读模式
+        </li></ul></div></div> <!----> <!----> <!----></div><div class="global-ui"><div></div></div></div>
+    <script src="/assets/js/app.30b63f87.js" defer></script><script src="/assets/js/2.f7063564.js" defer></script><script src="/assets/js/10.a486be49.js" defer></script>
+  </body>
+</html>
